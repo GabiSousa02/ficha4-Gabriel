@@ -1,30 +1,40 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Card from "./Card.jsx";
 
-const cards = [
-  { name: "Dragão de Cobalto", type: "Criatura", attack: 7, defense: 5 },
-  { name: "Guardiã das Marés", type: "Criatura", attack: 4, defense: 8 },
-  { name: "Rito de Ferro", type: "Feitiço", attack: 0, defense: 0 },
-  { name: "Sentinela de Âmbar", type: "Criatura", attack: 6, defense: 6 },
-  { name: "Eco do Vazio", type: "Feitiço", attack: 0, defense: 0 },
-];
-
 function App() {
+  const [cards, setCards] = useState([]);
   const [filter, setFilter] = useState("Todas");
   const [search, setSearch] = useState("");
   const [randomCard, setRandomCard] = useState(null);
   const [sorted, setSorted] = useState(false);
 
+  useEffect(() => {
+    fetch("http://localhost:3000/api/cartas")
+      .then((res) => res.json())
+      .then((data) => setCards(data));
+  }, []);
+
   let visible = cards
-    .filter((card) => filter === "Todas" || card.type === filter)
-    .filter((card) => card.name.toLowerCase().includes(search.toLowerCase()));
+    .filter(
+      (card) => filter === "Todas" || card.type === filter
+    )
+    .filter((card) =>
+      card.name.toLowerCase().includes(search.toLowerCase())
+    );
 
   if (sorted) {
-    visible = [...visible].sort((a, b) => b.attack - a.attack);
+    visible = [...visible].sort(
+      (a, b) => b.attack - a.attack
+    );
   }
 
   function pickRandom() {
-    setRandomCard(cards[Math.floor(Math.random() * cards.length)]);
+    if (cards.length === 0) {
+      return;
+    }
+
+    const index = Math.floor(Math.random() * cards.length);
+    setRandomCard(cards[index]);
   }
 
   return (
@@ -36,15 +46,25 @@ function App() {
       </p>
 
       <div>
-        <button onClick={() => setFilter("Todas")}>Todas</button>
-        <button onClick={() => setFilter("Criatura")}>Só criaturas</button>
-        <button onClick={() => setFilter("Feitiço")}>Só feitiços</button>
+        <button onClick={() => setFilter("Todas")}>
+          Todas
+        </button>
+
+        <button onClick={() => setFilter("Criatura")}>
+          Só criaturas
+        </button>
+
+        <button onClick={() => setFilter("Feitiço")}>
+          Só feitiços
+        </button>
+
         <button onClick={() => setSorted(!sorted)}>
           {sorted ? "Ordem original" : "Ordenar por ataque"}
         </button>
       </div>
 
       <input
+        type="text"
         value={search}
         onChange={(e) => setSearch(e.target.value)}
         placeholder="Procurar pelo nome…"
@@ -61,11 +81,15 @@ function App() {
       )}
 
       <h2>Carta à sorte</h2>
-      <button onClick={pickRandom}>Escolher outra</button>
+
+      <button onClick={pickRandom}>
+        Escolher outra
+      </button>
+
       {randomCard && (
         <p>
-          <b>{randomCard.name}</b> — {randomCard.type} · ataque {randomCard.attack} ·
-          defesa {randomCard.defense}
+          <b>{randomCard.name}</b> — {randomCard.type} · ataque{" "}
+          {randomCard.attack} · defesa {randomCard.defense}
         </p>
       )}
     </main>
