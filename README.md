@@ -1,6 +1,6 @@
 Ficha 4 – API de Cartas
 
-Como executar o projeto
+Para executar o projeto
 São necessários dois terminais.
 
 Terminal 1 – Server
@@ -9,7 +9,7 @@ node --watch server.js
 O servidor fica disponível em http://localhost:3000.
 
 Terminal 2 – Client
-Entrar na pasta client e executar:
+Na pasta client executar:
 npm run dev
 A aplicação React fica disponível em http://localhost:5173.
 
