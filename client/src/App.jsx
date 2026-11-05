@@ -8,12 +8,22 @@ function App() {
   const [search, setSearch] = useState("");
   const [randomCard, setRandomCard] = useState(null);
   const [sorted, setSorted] = useState(false);
+  const [error, setError] = useState("");
 
   useEffect(() => {
-     fetch("http://localhost:3000/api/cartas")
-    .then((res) => res.json())
+  fetch("http://localhost:3000/api/cartas")
+    .then((res) => {
+      if (!res.ok) {
+        throw new Error(`Erro HTTP ${res.status}`);
+      }
+
+      return res.json();
+    })
     .then((data) => {
       setCards(data);
+    })
+    .catch((err) => {
+      setError(err.message);
     })
     .finally(() => {
       setLoading(false);
@@ -42,8 +52,12 @@ function App() {
     setRandomCard(cards[index]);
   }
   if (loading) {
-    return <p>A carregar…</p>;
-  }
+  return <h2>A carregar...</h2>;
+}
+
+if (error) {
+  return <h2>Erro ao carregar cartas: {error}</h2>;
+}
 
   return (
     <main>
