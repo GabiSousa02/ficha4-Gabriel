@@ -15,7 +15,7 @@ A aplicação React fica disponível em http://localhost:5173.
 
 Pergunta 3 – CORS
 
-Quem bloqueia o pedido é o browser, através da política CORS. O servidor consegue responder com os dados em JSON, mas sem o header Access-Control-Allow-Origin o browser impede que o JavaScript da aplicação React aceda à resposta. Sei que o problema é do CORS porque o endereço da API abre diretamente no browser, mas o fetch é bloqueado.
+Quem bloqueia o pedido é o browser, através do CORS. O servidor consegue responder com os dados em JSON, mas sem o header Access-Control-Allow-Origin o browser impede que o JavaScript da aplicação React aceda à resposta. Sei que o problema é do CORS porque o endereço da API abre diretamente no browser, mas o fetch é bloqueado.
 
 Pergunta 4 – Comparação com a Ficha 3
 
