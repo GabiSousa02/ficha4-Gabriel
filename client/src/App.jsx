@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import Card from "./Card.jsx";
 
 function App() {
+  const [loading, setLoading] = useState(true);
   const [cards, setCards] = useState([]);
   const [filter, setFilter] = useState("Todas");
   const [search, setSearch] = useState("");
@@ -9,11 +10,15 @@ function App() {
   const [sorted, setSorted] = useState(false);
 
   useEffect(() => {
-    fetch("http://localhost:3000/api/cartas")
-      .then((res) => res.json())
-      .then((data) => setCards(data));
-  }, []);
-
+     fetch("http://localhost:3000/api/cartas")
+    .then((res) => res.json())
+    .then((data) => {
+      setCards(data);
+    })
+    .finally(() => {
+      setLoading(false);
+    });
+}, []);
   let visible = cards
     .filter(
       (card) => filter === "Todas" || card.type === filter
@@ -35,6 +40,9 @@ function App() {
 
     const index = Math.floor(Math.random() * cards.length);
     setRandomCard(cards[index]);
+  }
+  if (loading) {
+    return <p>A carregar…</p>;
   }
 
   return (
